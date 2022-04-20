@@ -1,0 +1,29 @@
+{
+  "name": "lob-apiv1",
+  "version": "1.0.0",
+  "description": "prod: * Use node index.js",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.17.3",
+    "expressjs": "^1.0.1",
+    "nodemon": "^2.0.15"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/panda/lob-apiv1.git"
+  },
+  "keywords": [
+    "api",
+    "lob"
+  ],
+  "author": "steve",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/panda/lob-apiv1/issues"
+  },
+  "homepage": "https://github.com/panda/lob-apiv1#readme"
+}
