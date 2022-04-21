@@ -113,6 +113,14 @@ app.delete('/api/v1/address/:line1', (req, res) => {
         a => a.line1 === req.params.line1,
     );
     if (!address) res.status(404).send('The address was not found'); // return 404
+
+    // delete address
+    const index = data.indexOf(address);
+    data.splice(index, 1)
+
+    // respond to client
+    res.send(address)
+
 });
 
 
