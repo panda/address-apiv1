@@ -75,7 +75,7 @@ app.put('/api/v1/address/:line1', (req, res) => {
     console.log("[PUT] route has been reached")
 
     // Get JSON
-    const address = data.filter(
+    const address = data.find(
         a => a.line1 === req.params.line1,
         b => b.line2 === req.params.line2,
         c => c.city === req.params.city,
@@ -116,7 +116,7 @@ app.delete('/api/v1/address/:line1', (req, res) => {
     console.log("[DELETE] route has been reached");
 
     // Get JSON
-    const address = data.filter(
+    const address = data.find(
         a => a.line1 === req.params.line1,
     );
 
