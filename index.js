@@ -27,7 +27,11 @@ app.get('/api/v1/address/:line1', (req, res) => {
         a => a.line1 === req.params.line1
     );
 
-    if (!address) res.status(404).send('The address was not found'); // return 404
+    if (!address) {
+        // I actually think if I didn't add return here, it would still execute the code, so adding ar return should stop it here if 404 occurs
+        return res.status(404).send('The address was not found'); // return 404 
+    }
+    
     res.send(address);
 });
 
@@ -78,7 +82,10 @@ app.put('/api/v1/address/:line1', (req, res) => {
         d => d.state === req.params.state,
         e => e.zip === req.params.zip,
     );
-    if (!address) res.status(404).send('The address was not found'); // return 404
+    if (!address) {
+        // I actually think if I didn't add return here, it would still execute the code, so adding ar return should stop it here if 404 occurs
+        return res.status(404).send('The address was not found'); // return 404 
+    }
 
     const addressBlob = {
         line1: req.body.line1,
@@ -112,13 +119,16 @@ app.delete('/api/v1/address/:line1', (req, res) => {
     const address = data.find(
         a => a.line1 === req.params.line1,
     );
-    if (!address) res.status(404).send('The address was not found'); // return 404
 
+    if (!address) {
+        // I actually think if I didn't add return here, it would still execute the code, so adding ar return should stop it here if 404 occurs
+        return res.status(404).send('The address was not found'); // return 404 
+    }
     // delete address
     const index = data.indexOf(address);
     data.splice(index, 1)
 
-    // respond to client
+    // respond to clients
     res.send(address)
 
 });
