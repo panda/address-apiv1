@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express();
 
+app.use(express.json()); //using expresses built in middleware for requests
+
 const data = require('./data/address.json')
 // Express allows us to send http methods
 // app.get, app.post, app.delete
@@ -21,6 +23,29 @@ app.get('/api/v1/addresses/:line1', (req, res) => {
     const addresses = data.find(c => c.line1 === req.params.line1);
     if (!addresses) res.status(404).send('The address was not found'); // return 404
     res.send(addresses);
+});
+
+// Add addresses to list
+/* 
+{
+        "line1": "184 Strawberry Street",
+        "line2": "Suite 6100",
+        "city": "Tampa",
+        "state": "FL",
+        "zip": "94107"
+}
+*/
+app.post('/api/v1/addresses', (req, res) => {
+    console.log("post route interacted with");
+    const address = {
+        line1: req.body.line1,
+        line2: req.body.line2,
+        city: req.body.city,
+        state: req.body.state,
+        zip: req.body.zip,
+    };
+    data.push(address); // post data to list 
+    res.send(data); // send request back to confirm
 });
 
 // Environment variable for port
