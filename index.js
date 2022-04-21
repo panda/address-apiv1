@@ -1,4 +1,4 @@
-const Joi = require('joi'); // Pascal for classes
+const Joi = require('joi');
 const express = require('express');
 const app = express();
 
@@ -15,20 +15,21 @@ app.get('/', (req, res) => {
     res.send('Hello World');
 });
 
-app.get('/api/v1/addresses', (req, res) => {
-    console.log("/api/v1/addresses recieved request");
+app.get('/api/v1/address', (req, res) => {
+    console.log("/api/v1/address recieved request");
     res.send(data);
 });
 
 // ?/sortBy=name
 // return all matching strings from query
-app.get('/api/v1/addresses/:line1', (req, res) => {
-    const addresses = data.find(c => c.line1 === req.params.line1);
-    if (!addresses) res.status(404).send('The address was not found'); // return 404
-    res.send(addresses);
+// BUG: Return multiple finds
+app.get('/api/v1/address/:line1', (req, res) => {
+    const address = data.find(a => a.line1 = req.params.line1);
+    if (!address) res.status(404).send('The address was not found'); // return 404
+    res.send(address);
 });
 
-// Add addresses to list
+// Add address to list
 /* 
 {
         "line1": "184 Strawberry Street",
@@ -38,10 +39,10 @@ app.get('/api/v1/addresses/:line1', (req, res) => {
         "zip": "94107"
 }
 */
-app.post('/api/v1/addresses', (req, res) => {
+app.post('/api/v1/address', (req, res) => {
     console.log("post route interacted with");
 
-    const address = {
+    const addressBlob = {
         line1: req.body.line1,
         line2: req.body.line2,
         city: req.body.city,
@@ -56,33 +57,20 @@ app.post('/api/v1/addresses', (req, res) => {
         // 400 for bad request
         res.status(400).send(error.details[0].message);
         return;
-    }
+    };
 
-    data.push(address); // post data to list 
-    res.send(address); // send request back to confirm    
+    data.push(addressBlob); // post data to list 
+    res.send(address);
 });
 
 
-// Modify addresses
-app.put('/api/addresses/:line1', (req, res) => {
-    // Look up the address
-    // if not exist return 404
-    const addresses = data.find(c => c.line1 === req.params.line1);
-    if (!addresses) res.status(404).send('The address was not found'); // return 404
+// Modify address
+app.put('/api/v1/address/:line1', (req, res) => {
+    console.log("Put route has been reached")
+    const address = data.find(a => a.line1 = req.params.line1);
+    if (!address) res.status(404).send('The address was not found'); // return 404
 
-    // validate
-    // if invalid return 400
-    // object destruct
-    const { error } = validateAddress(req.body)
-
-    if (error) {
-        // 400 for bad request
-        res.status(400).send(error.details[0].message);
-        return;
-    }
-
-    // update address
-    const address = {
+    const addressBlob = {
         line1: req.body.line1,
         line2: req.body.line2,
         city: req.body.city,
@@ -90,14 +78,24 @@ app.put('/api/addresses/:line1', (req, res) => {
         zip: req.body.zip
     };
 
-    // return updated address
-    res.send(address)
+    // object destruct
+    const { error } = validateAddress(req.body)
+
+    if (error) {
+        // 400 for bad request
+        res.status(400).send(error.details[0].message);
+        return;
+    };
+
+    data.push(addressBlob); // post data to list 
+    res.send(addressBlob); // send request back to confirm    
+
 });
 
 function validateAddress(address) {
     const schema = Joi.object({
         line1: Joi.string().required(),
-        line2: Joi.string().required(),
+        line2: Joi.string(),
         city: Joi.string().required(),
         state: Joi.string().required(),
         zip: Joi.string().min(5).max(5).required(), // 33617 (5)
@@ -105,7 +103,7 @@ function validateAddress(address) {
 
     return schema.validate(address);
 
-}
+};
 
 // Environment variable for port
 const port = process.env.PORT || 8080;
