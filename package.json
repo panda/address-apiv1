@@ -6,6 +6,7 @@
   "dependencies": {
     "express": "^4.17.3",
     "expressjs": "^1.0.1",
+    "joi": "^17.6.0",
     "nodemon": "^2.0.15"
   },
   "devDependencies": {},

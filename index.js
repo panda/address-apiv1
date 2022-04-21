@@ -1,4 +1,5 @@
-const express = require('express')
+const Joi = require('joi'); // Pascal for classes
+const express = require('express');
 const app = express();
 
 app.use(express.json()); //using expresses built in middleware for requests
