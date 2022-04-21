@@ -20,7 +20,7 @@ COPY . .
 RUN export port=8080
 
 # expose container port
-EXPOSE 80
+EXPOSE 8080
 
 # npm script
 CMD [ "npm", "run", "production"]
