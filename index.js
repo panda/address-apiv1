@@ -4,7 +4,7 @@ const app = express();
 
 app.use(express.json()); //using expresses built in middleware for requests
 
-const data = require('./data/address.json')
+const data = require('./data/address.json');
 // Express allows us to send http methods
 // app.get, app.post, app.delete
 // https://expressjs.com/en/4x/api.html
@@ -38,15 +38,34 @@ app.get('/api/v1/addresses/:line1', (req, res) => {
 */
 app.post('/api/v1/addresses', (req, res) => {
     console.log("post route interacted with");
+
+    // https://joi.dev/api/?v=17.6.0
+    const schema = Joi.object({
+        line1: Joi.string().required(),
+        line2: Joi.string().required(),
+        city: Joi.string().required(),
+        state: Joi.string().required(),
+        zip: Joi.string().min(5).max(5).required(), // 33617 (5)
+    });
+
     const address = {
         line1: req.body.line1,
         line2: req.body.line2,
         city: req.body.city,
         state: req.body.state,
-        zip: req.body.zip,
-    };
-    data.push(address); // post data to list 
-    res.send(data); // send request back to confirm
+        zip: req.body.zip
+    }
+
+    const result = schema.validate(address);
+
+    if (result.error) {
+        // 400 for bad request
+        res.status(400).send(result.error.details[0]);
+        return;
+    } else {
+        data.push(address); // post data to list 
+        res.send(address); // send request back to confirm    
+    }
 });
 
 // Environment variable for port
