@@ -25,12 +25,12 @@ app.get('/api/v1/address', (req, res) => {
 app.get('/api/v1/address/:line1', (req, res) => {
     console.log("[GET] /api/v1/address/:line1 recieved request");
 
+    // adding a .filter() and a .includes() to refine the :line1
     const search = (text) => data.filter(({ line1 }) => line1.includes(text));
 
     const address = search(req.params.line1);
 
     console.log(address)
-    
     if (!address) {
         return res.status(404).send('The address was not found'); // return 404 
     }
@@ -136,6 +136,9 @@ app.delete('/api/v1/address/:line1', (req, res) => {
 
 });
 
+// https://joi.dev/api/?v=17.6.0
+// Used for validation
+// ex: zip code must be 5 char long (since data/address.json stores it as a string instead of int)
 function validateAddress(address) {
     const schema = Joi.object({
         line1: Joi.string().required(),
