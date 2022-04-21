@@ -45,6 +45,12 @@ For development (using nodemon!): `npm run dev`
 'DELETE /api/v1/address/<line1>' -> 'Delete an existing address from the field "line1".'
 ```
 
+You can make requests to the programs like `cURL` or `Postman`  
+
+An example using `cURL` can be seen with: `curl http://localhost:8080/api/v1/address`   
+
+As a teaser, if you wanted to get a better `cURL` output. I highly recommend looking into a program called `jq` and pipe it in with `cURL` 
+`curl http://localhost:8080/api/v1/address | jq .`
 ## Docker
 There will be a docker file that you will be able to build and then run to get the app running in any environment that has docker installed.
 
