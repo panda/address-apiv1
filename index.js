@@ -5,7 +5,6 @@ const app = express();
 app.use(express.json()); //using expresses built in middleware for requests
 
 const data = require('./data/address.json');
-const { valid } = require('joi');
 // Express allows us to send http methods
 // app.get, app.post, app.delete
 // https://expressjs.com/en/4x/api.html
@@ -24,7 +23,10 @@ app.get('/api/v1/address', (req, res) => {
 // return all matching strings from query
 // BUG: Return multiple finds
 app.get('/api/v1/address/:line1', (req, res) => {
-    const address = data.find(a => a.line1 = req.params.line1);
+    const address = data.find(
+        a => a.line1 === req.params.line1
+    );
+
     if (!address) res.status(404).send('The address was not found'); // return 404
     res.send(address);
 });
@@ -60,14 +62,20 @@ app.post('/api/v1/address', (req, res) => {
     };
 
     data.push(addressBlob); // post data to list 
-    res.send(address);
+    res.send(addressBlob);
 });
 
 
 // Modify address
 app.put('/api/v1/address/:line1', (req, res) => {
     console.log("Put route has been reached")
-    const address = data.find(a => a.line1 = req.params.line1);
+    const address = data.find(
+        a => a.line1 === req.params.line1,
+        b => b.line2 === req.params.line2,
+        c => c.city === req.params.city,
+        d => d.state === req.params.state,
+        e => e.zip === req.params.zip,
+    );
     if (!address) res.status(404).send('The address was not found'); // return 404
 
     const addressBlob = {
@@ -79,7 +87,7 @@ app.put('/api/v1/address/:line1', (req, res) => {
     };
 
     // object destruct
-    const { error } = validateAddress(req.body)
+    const { error } = validateAddress(addressBlob)
 
     if (error) {
         // 400 for bad request
