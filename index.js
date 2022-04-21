@@ -23,12 +23,15 @@ app.get('/api/v1/address', (req, res) => {
 // return all matching strings from query
 // BUG: Return multiple finds
 app.get('/api/v1/address/:line1', (req, res) => {
-    const address = data.filter(
-        a => a.line1 === req.params.line1
-    );
+    console.log("[GET] /api/v1/address/:line1 recieved request");
 
+    const search = (text) => data.filter(({ line1 }) => line1.includes(text));
+
+    const address = search(req.params.line1);
+
+    console.log(address)
+    
     if (!address) {
-        // I actually think if I didn't add return here, it would still execute the code, so adding ar return should stop it here if 404 occurs
         return res.status(404).send('The address was not found'); // return 404 
     }
     
@@ -124,7 +127,7 @@ app.delete('/api/v1/address/:line1', (req, res) => {
         // I actually think if I didn't add return here, it would still execute the code, so adding ar return should stop it here if 404 occurs
         return res.status(404).send('The address was not found'); // return 404 
     }
-    // delete address
+    // index address
     const index = data.indexOf(address);
     data.splice(index, 1)
 
@@ -132,9 +135,6 @@ app.delete('/api/v1/address/:line1', (req, res) => {
     res.send(address)
 
 });
-
-
-
 
 function validateAddress(address) {
     const schema = Joi.object({
