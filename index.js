@@ -10,12 +10,12 @@ const data = require('./data/address.json');
 // https://expressjs.com/en/4x/api.html
 
 app.get('/', (req, res) => {
-    console.log("Request recieved")
+    console.log("Request recieved");
     res.send('Hello World');
 });
 
 app.get('/api/v1/address', (req, res) => {
-    console.log("/api/v1/address recieved request");
+    console.log("[GET] /api/v1/address recieved request");
     res.send(data);
 });
 
@@ -42,7 +42,7 @@ app.get('/api/v1/address/:line1', (req, res) => {
 }
 */
 app.post('/api/v1/address', (req, res) => {
-    console.log("post route interacted with");
+    console.log("[POST] route interacted with");
 
     const addressBlob = {
         line1: req.body.line1,
@@ -53,7 +53,7 @@ app.post('/api/v1/address', (req, res) => {
     };
 
     // object destruct
-    const { error } = validateAddress(req.body)
+    const { error } = validateAddress(req.body);
 
     if (error) {
         // 400 for bad request
@@ -68,7 +68,9 @@ app.post('/api/v1/address', (req, res) => {
 
 // Modify address
 app.put('/api/v1/address/:line1', (req, res) => {
-    console.log("Put route has been reached")
+    console.log("[PUT] route has been reached")
+
+    // Get JSON
     const address = data.find(
         a => a.line1 === req.params.line1,
         b => b.line2 === req.params.line2,
@@ -87,7 +89,8 @@ app.put('/api/v1/address/:line1', (req, res) => {
     };
 
     // object destruct
-    const { error } = validateAddress(addressBlob)
+    // Validate query aswell
+    const { error } = validateAddress(addressBlob);
 
     if (error) {
         // 400 for bad request
@@ -95,10 +98,25 @@ app.put('/api/v1/address/:line1', (req, res) => {
         return;
     };
 
+    // push to data and respond to client
     data.push(addressBlob); // post data to list 
     res.send(addressBlob); // send request back to confirm    
 
 });
+
+// delete object
+app.delete('/api/v1/address/:line1', (req, res) => {
+    console.log("[DELETE] route has been reached");
+
+    // Get JSON
+    const address = data.find(
+        a => a.line1 === req.params.line1,
+    );
+    if (!address) res.status(404).send('The address was not found'); // return 404
+});
+
+
+
 
 function validateAddress(address) {
     const schema = Joi.object({
