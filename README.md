@@ -1,4 +1,4 @@
-# lob-apiv1
+# address-apiv1
 A basically proof of concept using Express to serve a REST API for reading json data from an endpoint
 
 Neat features:
